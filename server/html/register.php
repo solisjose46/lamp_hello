@@ -72,7 +72,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
               // Redirect to login page
-              header("location: login2.php");
+              header("location: login.php");
             }
             else{
               echo "Oops! Something went wrong. Please try again later.";
@@ -122,7 +122,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       </div>
       <div class="row">
         <div class="col">
-        <p><a href="login2.php">Login instead</a>?</p>
+        <p><a href="login.php">Login instead</a>?</p>
         </div>
       </div>
     </div>

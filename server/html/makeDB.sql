@@ -1,3 +1,8 @@
+create user 'lamp_user'@'localhost' identified by 'password123';
+grant all privileges on *.* to 'lamp_user'@'localhost';
+flush privileges;
+create database lamp_hello;
+use lamp_hello;
 create table users(
         userID int not null auto_increment,
         username varchar(50) not null,

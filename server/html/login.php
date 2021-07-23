@@ -116,7 +116,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       </div>
       <div class="row">
         <div class="col">
-          <p><a href="register2.php">Register instead</a>?</p>
+          <p><a href="register.php">Register instead</a>?</p>
         </div>
       </div>
     </div>
