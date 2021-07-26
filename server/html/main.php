@@ -11,8 +11,24 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 // Include config file
 require_once "config.php";
 
+//learn how to multiline comment!
+//do a union!
+$getBorks="select user_ID, bork from borks where user_ID!=".$_SESSION["id"];
+$rs = $link->query($getBorks);
+while($obj = $rs->fetch_object()){
+echo "<pre>";
+$getUser="select username from users where userID=".$obj->user_ID;
+$rs2 = $link->query($getUser);
+$obj2 = $rs2->fetch_object();
+print_r($obj2->username."\n");
+print_r($obj->bork."\n");
+echo "</pre>";
+}
 
 
+//echo "<pre>";
+//print_r($GLOBALS);
+//echo "</pre>";
 
 ?>
 
@@ -37,7 +53,7 @@ require_once "config.php";
                         <!-- <span class="invalid-feedback"><?php echo $username_err; ?></span> -->
                     </div>
                     <div class="form-group">
-                        <input type="submit" class="btn btn-primary" value="Bork!">
+                        <input type="submit" value="Bork!">
                     </div>
                 </form>
             </div>
@@ -73,7 +89,13 @@ require_once "config.php";
                     </div>
                 </form>
             </div>
-        </div> -->
+	</div> -->
+	<div class="row">
+	    <div class="col">
+		<p><a href="logout.php">Sign Out</a></p>
+		<p><a href="reset-password.php">Reset Your Password</a></p>
+	    </div>
+	</div>
     </div>
   </body>
 </html>
