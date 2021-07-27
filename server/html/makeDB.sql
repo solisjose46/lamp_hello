@@ -1,3 +1,5 @@
+/*This script creates database and tables for this app*/
+
 /*
 create user 'lamp_user'@'localhost' identified by 'password123';
 grant all privileges on *.* to 'lamp_user'@'localhost';
@@ -24,9 +26,9 @@ create table following(
 
 create table borks(
         borkID int not null auto_increment,
-        user_ID int not null,
+        userID int not null,
         bork varchar(140) not null,
         createdAT datetime default current_timestamp,
         primary key (borkID),
-	foreign key (user_ID) references users (userID) on delete cascade on update cascade
+	foreign key (userID) references users (userID) on delete cascade on update cascade
 );

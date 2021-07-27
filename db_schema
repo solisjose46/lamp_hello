@@ -16,5 +16,5 @@ note: user1 follows user2
 +-------------------------------------+
 |               Borks                 |
 +-------------------------------------+
-| borkID | user_ID | bork | createdAT |
+| borkID | userID | bork | createdAT |
 +-------------------------------------+
