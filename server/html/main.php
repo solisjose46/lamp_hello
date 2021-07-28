@@ -11,25 +11,33 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 // Include config file
 require_once "config.php";
 
-//learn how to multiline comment!
-//do a union!
-$getBorks="select user_ID, bork from borks where user_ID!=".$_SESSION["id"];
-$rs = $link->query($getBorks);
-while($obj = $rs->fetch_object()){
-echo "<pre>";
-$getUser="select username from users where userID=".$obj->user_ID;
-$rs2 = $link->query($getUser);
-$obj2 = $rs2->fetch_object();
-print_r($obj2->username."\n");
-print_r($obj->bork."\n");
-echo "</pre>";
-}
+//prep query to get borks of current user's following
+$following="select users.userID, users.username, borks.bork from users inner join borks on users.userID=borks.userID where users.userID=(
+	select user2_ID from following where user1_ID=".$_SESSION["id"]."
+)";
+
+//prep query to get borks of users who are not followed by current logged in user
+$discover="select users.userID, users.username, borks.bork from users inner join borks on users.userID=borks.userID where users.userID!=".$_SESSION["id"]." and users.userID!=(
+        select user2_ID from following where user1_ID=".$_SESSION["id"]."
+)"; 
+
+//first check if following relationship exists
+//if false run
+$follow_query="insert into following (user1_ID, user2_ID) values (".$_SESSION["id"].",".$discover_obj->userID.")";
+//else do nothing
+
+//unfollow user
+//check if relationship if exists
+//if true run
+$unfollow_query="delete from following where user1_ID=".$_SESSION["id"]." and user2_ID=".$discover_obj->userID."";
+
+//create bork query
+$make_bork="insert into borks (userID, bork) values (".$_SESSION["id"].", !! INSERT BORK HERE !!);"
 
 
-//echo "<pre>";
-//print_r($GLOBALS);
-//echo "</pre>";
-
+//execute queries, test for failure later
+$rs_following = $link->query($following);
+$rs_discover = $link->query($discover);
 ?>
 
 <!DOCTYPE html>
@@ -48,48 +56,60 @@ echo "</pre>";
                 <form>
                     <div class="form-group">
                         <img src="https://www.kindpng.com/picc/m/205-2055865_dog-face-transparent-dog-meme-face-png-png.png" alt="profile picture" style="width:100px;height:100px;" class="rounded">
-                        <label><strong>@username</strong></label>
+			<label><strong>@<?php echo $_SESSION["username"]; ?></strong></label>
                         <input type="text" name="bork" class="form-control">
-                        <!-- <span class="invalid-feedback"><?php echo $username_err; ?></span> -->
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Bork!">
                     </div>
                 </form>
             </div>
-        </div>
+	</div>
+
         <!-- Logged in user's following borks here -->
-        <div class="row border-bottom border-dark"><div class="col"><h1>Following</h1></div></div>
-        <!-- <div class="row">
-            <div class="col">
-                <form>
-                    <div class="form-group">
-                        <img src="https://www.kindpng.com/picc/m/205-2055865_dog-face-transparent-dog-meme-face-png-png.png" alt="profile picture" style="width:100px;height:100px;" class="rounded">
-                        <label><strong>@follower</strong></label>
-                        <p>My dawg just got handled by city pound</p>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" class="btn btn-outline-dark" value="unfollow">
-                    </div>
-                </form>
-            </div>
-        </div> -->
-        <!-- these are randos borks here so page isnt  -->
+	<div class="row border-bottom border-dark"><div class="col"><h1>Following</h1></div></div>
+<?php
+while($following_obj = $rs_following->fetch_object()){
+echo '
+<div class="row">
+<div class="col">
+    <form>
+	<div class="form-group">
+	    <img src="https://www.kindpng.com/picc/m/205-2055865_dog-face-transparent-dog-meme-face-png-png.png" alt="profile picture" style="width:100px;height:100px;" class="rounded">
+	    <label><strong>@'.$following_obj->username.'</strong></label>
+	    <p>'.$following_obj->bork.'</p>
+	</div>
+	<div class="form-group">
+	    <input type="submit" class="btn btn-outline-dark" value="unfollow">
+	</div>
+    </form>
+</div>
+</div>
+';
+}
+?>
+        <!-- these are randos borks here so page isnt empty -->
         <div class="row border-bottom border-dark"><div class="col"><h1>Discover</h1></div></div>
-        <!-- <div class="row">
+<?php
+while($discover_obj = $rs_discover->fetch_object()){
+	echo '
+	    <div class="row">
             <div class="col">
                 <form>
                     <div class="form-group">
                         <img src="https://www.kindpng.com/picc/m/205-2055865_dog-face-transparent-dog-meme-face-png-png.png" alt="profile picture" style="width:100px;height:100px;" class="rounded">
-                        <label><strong>@rando</strong></label>
-                        <p>Follow me my guy ruff ruff</p>
+                        <label><strong>@'.$discover_obj->username.'</strong></label>
+                        <p>'.$discover_obj->bork.'</p>
                     </div>
                     <div class="form-group">
                         <input type="submit" class="btn btn-primary" value="Follow">
                     </div>
                 </form>
             </div>
-	</div> -->
+	</div>
+
+';}
+?>
 	<div class="row">
 	    <div class="col">
 		<p><a href="logout.php">Sign Out</a></p>
