@@ -17,9 +17,14 @@ $following="select users.userID, users.username, borks.bork from users inner joi
 )";
 
 //get borks of those not followed by logged in user
-$discover="select users.userID, users.username, borks.bork from users inner join borks on users.userID=borks.userID where users.userID!=".$_SESSION["id"]." and users.userID!=(
-        select user2_ID from following where user1_ID=".$_SESSION["id"]."
-)"; 
+//$discover="select users.userID, users.username, borks.bork from users inner join borks on users.userID=borks.userID where users.userID!=".$_SESSION["id"]." and users.userID!=(
+//        select user2_ID from following where user1_ID=".$_SESSION["id"]."
+//)"; 
+
+
+//triple union
+$discover="select users.userID, users.username, borks.bork from users inner join borks on users.userID=borks.userID";
+
 
 //follow user *check if entry already exists
 //$follow_exists="select exists(select * from following where user1_ID=".$_SESSION["id"]." and user2_ID=".$following_obj->userID.")";
