@@ -32,3 +32,5 @@ create table borks(
         primary key (borkID),
 	foreign key (userID) references users (userID) on delete cascade on update cascade
 );
+
+alter table following add constraint followOnce unique(user1_ID, user2_ID);
