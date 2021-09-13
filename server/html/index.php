@@ -46,14 +46,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		$make_follow="insert into following (user1_ID, user2_ID) values (".$_SESSION["id"].", ".$_POST["discoverID"].")";
 		$rs_make_follow = $link->query($make_follow);
 		$feedback = "Following!";
-		header("location:main.php");
+		header("location:index.php");
 	}
 	elseif(isset($_POST["submit"]) && $_POST["submit"]=="unfollow"){
 		print_r($_POST);
 		$make_unfollow="delete from following where user1_ID=".$_SESSION["id"]." and user2_ID=".$_POST["followID"]."";
 		$rs_make_unfollow = $link->query($make_unfollow);
 		$feedback = "unfollowed";
-		header("location:main.php");
+		header("location:index.php");
 	}
 
 }
