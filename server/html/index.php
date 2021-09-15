@@ -12,13 +12,13 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 require_once "config.php";
 
 // get borks of those followed by logged in user
-$following="select users.userID, users.username, borks.bork from users inner join borks on users.userID=borks.userID where users.userID=(
+$following="select users.userID, users.username, borks.bork from users inner join borks on users.userID=borks.userID where users.userID in (
         select user2_ID from following where user1_ID=".$_SESSION["id"]."
 )";
 
 //get borks of those not followed by logged in user
-$discover="select users.userID, users.username, borks.bork from users inner join borks on users.userID=borks.userID and users.userID!=".$_SESSION["id"]." and users.userID!=(
-        select coalesce ((select user2_ID from following where user1_ID=".$_SESSION["id"]."), 0)
+$discover="select users.userID, users.username, borks.bork from users inner join borks on users.userID=borks.userID where users.userID!=".$_SESSION["id"]." and users.userID not in (
+        select user2_ID from following where user1_ID=".$_SESSION["id"]."
 )";
 
 // executing queries
@@ -34,7 +34,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	if(isset($_POST["submit"]) && $_POST["submit"]=="Bork!"){
 		if(strlen($_POST["content"]) > 0 && strlen($_POST["content"]) < 140){
 			$make_bork="insert into borks (userID, bork) values (".$_SESSION["id"].",'".$_POST["content"]."')";
-			//$rs_make_bork = $link->query($make_bork);
+			$rs_make_bork = $link->query($make_bork);
 			$bork_succ = "Posted!";
 		}
 		else{
